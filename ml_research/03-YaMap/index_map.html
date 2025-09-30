@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8 ">
+<title>{{ title|safe }}</title>
+<meta name="description" content="Мониторинг биоценоза Брянской области" />
+<style>
+    a:hover {
+        color: red; /* Цвет ссылки */ 
+    }     
+    .container {
+    width: 75%; 
+    margin: 0 auto;
+    display: block;
+    clear: both;
+    }
+
+    .row {
+        text-align: center;
+    }
+
+    .leftcolumn {
+    width: 27%; 
+    float: left;
+    text-align: left;
+    }
+    .rightcolumn {
+    width: 73%; 
+    float: right;
+    }
+
+    h1 {
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+
+    h2 {
+    text-align: justify;
+    text-indent: 25pt;
+    font-size: 14pt;
+    font-weight: normal;
+    }
+
+    p {
+    font-size: 14pt;
+    }
+
+</style>
+</head>
+<body>
+<div class="container"><div class="row">
+    <div class="leftcolumn">
+        <a href="http://flora32.ru/"><img width='240' src="{{url_for('static', filename='toonmecom_3e5b60-1.jpg')}}" alt="Мониторинг биоценоза Брянской области."></a>
+    </div>
+    <div class="rightcolumn">
+        <h1>{{ title|safe }}</h1>
+        
+        <h2>Определители: растений, насекомых и животных. Сортов роз, пионов, фиалок, гортензий и других декоративных и&nbsp;комнатных растений. Их болезней, вредителей и фитопатологий.</h2>
+    <p style="text-align: justify; text-indent: 25pt;">
+        Наш сайт предназначен для всех натуралистов, дачников, цветоводов и просто любителей живой природы. Он определяет вид растения или животного по фотографии при помощи технологий машинного обучения. Для культурных декоративных растений дополнительно определяется их сорт. 
+    </p>
+    
+        <font size=+2>{{ page_content | safe  }}</font>
+    
+</div>
+</div></div>
+
+
+  <div class="container"><div class="row">
+    <div style="float: left;">
+        <div id="map" style="width: 1200px; height: 800px"></div>
+    </div>
+
+
+<script src="https://api-maps.yandex.ru/2.1/?apikey=e6b34264-72ad-4e9b-9c46-548063340836&lang=ru_RU" type="text/javascript"></script>
+
+<script>
+    var myMap;
+
+// Дождёмся загрузки API и готовности DOM.
+ymaps.ready(init);
+
+function init () {
+    // Создание экземпляра карты и его привязка к контейнеру с
+    // заданным id ("map").
+    myMap = new ymaps.Map('map', {
+        // При инициализации карты обязательно нужно указать
+        // её центр и коэффициент масштабирования.
+        center: [52.525500, 31.926500], // ГАПОУ НППК
+        zoom: 18
+    }, {
+        searchControlProvider: 'yandex#search'
+    });
+
+    {{ geoObjects | safe }}  
+}
+
+window.myMap=myMap;
+</script>
+
+
+
+
+<div style="float: right; text-align: left;">
+    {{ names_list_html | safe  }}
+</div>
+</div></div>
+
+<div class="container"><div class="row">
+    <p>&copy; Flora32.ru<br>Контакты: @pa5ht, steelfeetman@gmail.com,<br>https://vk.com/steelfeet
+</div>
+</div>
+
+
+</body>
+</html>

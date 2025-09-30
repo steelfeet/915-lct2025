@@ -1,0 +1,52 @@
+<head>
+    <script src="https://api-maps.yandex.ru/2.1/?apikey=ebdbf838-c3ec-456e-a490-05e34463788e&lang=ru_RU" type="text/javascript"></script>
+    <swcript src="https://api-maps.yandex.ru/2.1/?apikey=e6b34264-72ad-4e9b-9c46-548063340836&lang=ru_RU" type="text/javascript"></script>
+    
+</head>
+
+
+<body>
+    <div id="map" style="width: 1200px; height: 750px"></div>
+
+<script type="text/javascript">
+
+
+
+// Дождёмся загрузки API и готовности DOM.
+ymaps.ready(init);
+
+function init () {
+    if (!ymaps.panorama.isSupported()) {
+        // Если нет, то просто ничего не будем делать.
+        console.log("not supported");
+    }
+
+// Получение объекта Panorama.
+var locateRequest = ymaps.panorama.locate([52.525500, 31.931000]);
+locateRequest.then(
+  function (panoramas) {
+    if (panoramas.length) {
+      console.log("Ура, нашлась панорама " + panoramas[0]);       
+      var player = new ymaps.panorama.Player('map', panoramas[0], {
+            // Опции панорамы. 
+            // direction - направление взгляда.
+            direction: [270, 00]
+          });
+
+    } else {
+      console.log("Для заданной точки не найдено ни одной панорамы.");   
+      const element = document.getElementById('map');
+      element.style.backgroundColor = '#32F3A2'; // Sets background color       
+    }
+  },
+  function (err) {
+    console.log("При попытке получить панораму возникла ошибка.");
+  }
+);
+
+}
+
+
+
+</script>
+</body>

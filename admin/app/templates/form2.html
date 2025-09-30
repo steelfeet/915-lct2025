@@ -1,0 +1,88 @@
+{% extends "index.html" %}
+
+{% block app_content %}
+
+<style>
+
+td, th { /* table cells */
+    padding: 10px;
+}
+
+h3 {
+    margin-top: 20px; 
+}
+
+h4 {
+    margin-top: 25px; 
+}
+
+.tab_text {
+    font-size: 15pt;
+}
+
+.active_tab {
+    border-left: 1px solid black; 
+    border-top: 1px solid black; 
+    border-right: 1px solid black;
+
+}
+
+.unactive_tab {
+    border-bottom: 1px solid black; 
+}
+
+.bottom_tab {
+    border-left: 1px solid black; 
+    border-right: 1px solid black;
+    border-bottom: 1px solid black; 
+}
+
+
+.geogood {
+  border: 20px solid transparent; /* Required for border-image to work */
+  border-image: linear-gradient(to right, green, #33ff33) 1; /* Uses a red-to-blue gradient */
+}
+.geointernal {
+  border: 20px solid transparent; /* Required for border-image to work */
+  border-image: linear-gradient(to right, #990, yellow) 1; /* Uses a red-to-blue gradient */
+}
+.geobad {
+  border: 20px solid transparent; /* Required for border-image to work */
+  border-image: linear-gradient(to right, red, #ff6666) 1; /* Uses a red-to-blue gradient */
+}
+
+
+.ner_name {
+    background-color: #e2483d;
+}
+.ner_loc {
+    background-color: #48e23d;
+}
+
+.detected_bg {
+    background-color: #ccc;
+}
+
+</style>
+
+
+
+<div class="row" style="width: 95%;">
+    <div class="col-sm-12 text-left">
+        <!-- <a href="/sn">Stage Nominals</a> -->
+        {{ breadcrumbs|safe }}
+        <br>
+    </div>
+</div>
+
+
+<div class="row" style="width: 95%;">
+        <div class="col-sm-10 text-left">
+            <h3 style="text-align: left;">{{ h4|safe }}</h3>
+            {{ pipeline_html|safe }}
+
+        </div>
+
+
+    </div>    
+{% endblock %}

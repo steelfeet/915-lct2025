@@ -1,0 +1,41 @@
+{% extends "index.html" %}
+
+{% block app_content %}
+
+<style>
+
+td, th { /* table cells */
+    padding: 10px;
+}
+
+h3 {
+    margin-top: 0px; 
+}
+
+</style>
+
+
+
+<div class="row" style="width: 95%;">
+    <div class="col-sm-6 text-left">
+        <!-- <a href="/sn">Stage Nominals</a> -->
+        {{ breadcrumbs|safe }}
+        <br>
+    </div>
+</div>
+
+
+<div class="row" style="width: 95%;">
+        <div class="col-sm-2 text-left">
+            <h4>Настройки</h4>
+            {{ settings_list_html|safe }}
+        </div>
+
+        <div class="col-sm-10 text-left">
+            <h4 style="text-align: center;">Новости</h4>
+            {{ previews_list_html|safe }}
+        </div>
+
+
+    </div>    
+{% endblock %}

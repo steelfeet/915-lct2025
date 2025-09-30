@@ -1,0 +1,79 @@
+
+
+
+<input type="file" accept=".txt,image/*">
+<a href="#" class="upload_files button">Загрузить файлы</a>
+<div class="ajax-reply"></div>
+
+
+<script src="jquery-3.7.1.js"></script>
+<script>
+var files; // переменная. будет содержать данные файлов
+// заполняем переменную данными, при изменении значения поля file
+$('input[type=file]').on('change', function(){
+	files = this.files;
+  console.log("files")
+});
+
+$('.upload_files').on( 'click', function( event ){
+  console.log("click")
+});
+
+// обработка и отправка AJAX запроса при клике на кнопку upload_files
+$('.upload_files').on( 'click', function( event ){
+console.log('click');
+event.stopPropagation(); // остановка всех текущих JS событий
+event.preventDefault();  // остановка дефолтного события для текущего элемента - клик для <a> тега
+
+// ничего не делаем если files пустой
+if( typeof files == 'undefined' ) return;
+
+// создадим объект данных формы
+var data = new FormData();
+
+// заполняем объект данных файлами в подходящем для отправки формате
+$.each( files, function( key, value ){
+  data.append( key, value );
+});
+
+// AJAX запрос
+console.log('start ajax');
+$.ajax({
+  url         : 'http://localhost:5005/927-smartsocial',
+  type        : 'POST', // важно!
+  data        : data,
+  cache       : false,
+  dataType    : 'json',
+  // отключаем обработку передаваемых данных, пусть передаются как есть
+  processData : false,
+  // отключаем установку заголовка типа запроса. Так jQuery скажет серверу что это строковой запрос
+  contentType : false,
+  // функция успешного ответа сервера
+  success     : function(respond ){
+
+    var html = '';
+
+    respond.forEach(function(elem) {
+      html += '<p>';
+      html += "<img src=\"data:image/jpeg;base64, " + elem.img + "\"><br>";
+      html += "Name: " + elem.name +'<br>';
+      html += "Description: " + elem.description +'<br>';
+      html += "Group: " + elem.group +'<br>';
+      html += "Distance_with_input: " + elem.Distance_with_input +'<br>';
+    });
+    
+
+
+				$('.ajax-reply').html( html );
+
+  },
+  // функция ошибки ответа сервера
+  error: function( respond, jqXHR, status, errorThrown ){
+    console.log( 'ОШИБКА AJAX запроса: ' + status, jqXHR );
+    console.log(respond.data);
+  }
+
+});
+
+});
+</script>

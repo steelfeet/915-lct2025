@@ -1,0 +1,132 @@
+{% extends "index.html" %}
+
+{% block app_content %}
+
+<div class="row" style="width: 95%;">
+    <div class="col-sm-12 text-left">
+        {{ breadcrumbs|safe }}
+        <br><br><br>
+    </div>
+</div>
+
+
+<div class="row" style="width: 95%;">
+    <div class="col-sm-4 text-center">
+        {{ image_html|safe }}
+    </div>
+
+
+    <div class="col-sm-8 text-left">
+<div class="container"><div class="row">
+    <div style="float: left;">
+        <div id="map" style="width: 800px; height: 600px"></div>
+    </div>
+
+
+            <script src="https://api-maps.yandex.ru/2.1/?apikey=e6b34264-72ad-4e9b-9c46-548063340836&lang=ru_RU" type="text/javascript"></script>
+
+            <script>
+                var myMap;
+
+            // Дождёмся загрузки API и готовности DOM.
+            ymaps.ready(init);
+
+            function init () {
+                // Создание экземпляра карты и его привязка к контейнеру с
+                // заданным id ("map").
+                myMap = new ymaps.Map('map', {
+                    // При инициализации карты обязательно нужно указать
+                    // её центр и коэффициент масштабирования.
+                    center: [52.535513, 31.938249], // ГАПОУ НППК
+                    zoom: 15
+                }, {
+                    searchControlProvider: 'yandex#search'
+                });
+                
+                var myPlacemark = new ymaps.Placemark([52.535513, 31.938249], {iconContent: "НППК"},
+                {
+                    preset: 'islands#StretchyIcon',
+                    iconColor: '#00ff00',
+                    draggable: true
+                })
+                
+                /* https://qna.habr.com/q/1104258 */
+                /* Событие dragend - получение нового адреса */
+                myPlacemark.events.add('dragend', function(e){
+                    var coords = e.get('target').geometry.getCoordinates();
+
+                    const xhr = new XMLHttpRequest();
+                    var url = "http://213.155.192.79:3005/change_geo_class?image_id=11&lat=" + coords[0] + "&long=" + coords[1]
+                    console.log(url)
+                    xhr.open('GET', url, true); // method, URL, async (true for asynchronous)
+                    xhr.send(); // For GET requests
+
+                    xhr.onreadystatechange = function() {
+                    if (xhr.readyState === XMLHttpRequest.DONE) { // 4 means request is complete
+                        if (xhr.status === 200) { // 200 means successful response
+                            console.log(xhr.responseText); // Access the response data
+                            myPlacemark.properties.set('iconContent', xhr.responseText);
+
+                        } else {
+                            console.error('Request failed:', xhr.status);
+                        }
+                    }
+                    };                    
+
+                }); 
+                
+                /* Отслеживаем все клики на карте */
+                myMap.events.add('click', function (e) {
+                /* получить координаты клика */
+                var coords = e.get('coords');
+                /* переместить метку на новые координаты */
+                myPlacemark.geometry.setCoordinates(coords);
+
+                const xhr = new XMLHttpRequest();
+                    var url = "http://213.155.192.79:3005/change_geo_class?image_id={{ image_id|safe }}&lat=" + coords[0] + "&long=" + coords[1]
+                    console.log(url)
+                    xhr.open('GET', url, true); // method, URL, async (true for asynchronous)
+                    xhr.send(); // For GET requests
+
+                    xhr.onreadystatechange = function() {
+                    if (xhr.readyState === XMLHttpRequest.DONE) { // 4 means request is complete
+                        if (xhr.status === 200) { // 200 means successful response
+                            console.log(xhr.responseText); // Access the response data
+                            myPlacemark.properties.set('iconContent', xhr.responseText);
+
+
+                        } else {
+                            console.error('Request failed:', xhr.status);
+                        }
+                    }
+                };                    
+
+                });                 
+
+                myMap.geoObjects.add(myPlacemark);
+
+
+
+
+            }
+
+            window.myMap=myMap;
+            
+            
+            
+
+</script>
+
+    
+
+        </div>
+
+
+    </div>    
+
+</div>
+
+
+</div>    
+
+    {% endblock %}

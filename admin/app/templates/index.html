@@ -1,0 +1,16 @@
+{% extends 'bootstrap/base.html' %}
+
+{% block title %}
+{{ title|safe }} 
+{% endblock %}
+
+
+{% block navbar %}
+<link rel="stylesheet" href="/static/style.css" type="text/css">
+<center><br>
+{% endblock %}
+
+{% block content %}
+{% block app_content %}{% endblock %}
+{% endblock %}
+</div>

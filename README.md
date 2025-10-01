@@ -86,12 +86,12 @@ average_detected: 13.273809523809524; max_detected_n: 16; min_detected_n: 10
 Epoch 19 | Train Acc: 98.809532 | Train Loss: 0.050799 | Valid Acc: 96.666672 | Valid Loss: 0.077203  
 detected_n: 6314; average_detected: 0.161499897687743;   
 
-**geo_2.mobilenet.geo.teach.py** - обучение Mnet, аналогичное 01-GeoGuessr  
+ **geo_2.mobilenet.geo.teach.py** - обучение Mnet, аналогичное 01-GeoGuessr  
 Epoch 100 | Train Acc: 91.665306 | Train Loss: 0.584837 | Valid Acc: 38.019482 | Valid Loss: 4.260039  
 -----
 видим явное переобучение  
 
-**geo_2.mobilenet.vit.teach.py** - обучение ViT, аналогичное 01-GeoGuessr  
+ **geo_2.mobilenet.vit.teach.py** - обучение ViT, аналогичное 01-GeoGuessr  
 Epoch 6 | Train Acc: 77.695671 | Train Loss: 1.172473 | Valid Acc: 31.699139 | Valid Loss: 3.920901  
 Epoch 100 | Train Acc: 98.713699 | Train Loss: 0.113396 | Valid Acc: 34.599571 | Valid Loss: 4.715114  
 -----

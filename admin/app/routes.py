@@ -817,9 +817,12 @@ def show_pipeline():
 
     # Шаг #600+. Показ детектированных объектов
     pipeline_html += f"""
-    <p>&nbsp;<p>&nbsp;<h4>Шаг #600+. Показ детектированных объектов</h4>
+    <p>&nbsp;<p>&nbsp;<h4>Шаги #700-800+. Показ детектированных и классифицированных объектов</h4>
     """
     pipeline_html += detected.get_detected_html(preview_id)
+
+
+
 
 
 

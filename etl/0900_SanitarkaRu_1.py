@@ -11,6 +11,8 @@ from PIL import Image
 import torch
 from unsloth import FastModel
 
+os.environ["HF_TOKEN"] = ''
+
 
 from sqlalchemy import and_
 from sqlalchemy.sql.expression import func, select
@@ -82,15 +84,15 @@ print(f"processing_id: {processing_id}") #9
 
 image_items = db.session.query(db.Monitor_Images).all()
 for image_item in tqdm(image_items):
-    # обрабатывали ли изображение этим процессингом
-    image_status_item = db.session.query(db.Monitor_Image_Statuses).filter(and_(db.Monitor_Image_Statuses.image_id==image_item.id), (db.Monitor_Image_Statuses.processing_version==processing_id)).first()            
-    if image_status_item == None:
-        full_image_path = os.path.join(vault.VAULT_DIR, image_item.image_path)
-        img_main_clear = Image.open(full_image_path)
+    detected_items = db.session.query(db.Monitor_Objects).filter(db.Monitor_Objects.image_id==image_item.id).all()
+    for detected_item in detected_items:
+        if ("tree" in detected_item.label):
+            # обрабатывали ли обьект этим процессингом
+            detected_status_item = db.session.query(db.Monitor_Objects_Description).filter(and_(db.Monitor_Objects_Description.objects_id==detected_item.id), (db.Monitor_Objects_Description.processing_version==processing_id)).first()            
+            if detected_status_item == None:
+                full_image_path = os.path.join(vault.VAULT_DIR, image_item.image_path)
+                img_main_clear = Image.open(full_image_path)
 
-        detected_items = db.session.query(db.Monitor_Objects).filter(db.Monitor_Objects.image_id==image_item.id).all()   
-        for detected_item in detected_items:
-            if ("tree" in detected_item.label):
                 left = detected_item.left
                 right = detected_item.right
                 top = detected_item.top
@@ -129,18 +131,7 @@ for image_item in tqdm(image_items):
                 output = do_gemma_3n_inference(model, messages, max_new_tokens = 256)
                 text = tokenizer.decode(output[0], skip_special_tokens=True)
                 t, text_number = str(text).split("model")
-                text_number = text_number.strip()
-
-                # добавляем статус изображению
-                image_status_item = db.Monitor_Image_Statuses(
-                    image_id=image_item.id, 
-                    processing_version=processing_id,
-                    key="class_n",
-                    value=text_number
-                )
-                db.session.add(image_status_item)
-
-
+                class_n = int(text_number.strip())
 
 
                 messages =[
@@ -172,14 +163,14 @@ for image_item in tqdm(image_items):
                 output = do_gemma_3n_inference(model, messages, max_new_tokens = 256)
                 text = tokenizer.decode(output[0], skip_special_tokens=True)
                 t, text_number = str(text).split("model")
-                text_number = text_number.strip()
+                desc = text_number.strip()
 
-                # добавляем статус изображению
-                image_status_item = db.Monitor_Image_Statuses(
-                    image_id=image_item.id, 
+                # добавляем описание объекту
+                image_status_item = db.Monitor_Objects_Description(
+                    objects_id=detected_item.id, 
                     processing_version=processing_id,
-                    key="detailed",
-                    value=text_number
+                    class_n=class_n,
+                    desc=desc
                 )
                 db.session.add(image_status_item)
 
